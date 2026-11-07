@@ -3,176 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BME Calculator | ماشین‌حساب مهندسی پزشکی</title>
+<meta name="color-scheme" content="light dark">
+<title>BME Calculator</title>
 <style>
-:root{
-  --bg:#f6f8f8;--surface:#fff;--ink:#12242b;--muted:#5d727a;--line:#dde5e7;
-  --accent:#0b7f86;--accent-soft:#e3f3f3;--result:#f1f6f7;--warn:#b4531a;
-  --font:Tahoma,"Segoe UI",system-ui,sans-serif;
-  --math:"Cambria Math","STIX Two Math","Times New Roman",serif;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#0e1a1f;--surface:#15262c;--ink:#e6f0f2;--muted:#8fa6ad;--line:#25393f;--accent:#4fc3c9;--accent-soft:#16363a;--result:#112127;--warn:#e89a66}
-}
-:root[data-theme="dark"]{--bg:#0e1a1f;--surface:#15262c;--ink:#e6f0f2;--muted:#8fa6ad;--line:#25393f;--accent:#4fc3c9;--accent-soft:#16363a;--result:#112127;--warn:#e89a66}
-*{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 4px}
-h1{font-size:1.5rem;margin:0;font-weight:700;letter-spacing:0}
-h1 span{color:var(--accent);font-family:var(--math);direction:ltr;display:inline-block}
-.sub{color:var(--muted);font-size:.92rem;margin:2px 0 0}
-.theme{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:42px;height:42px;font-size:1.1rem;cursor:pointer}
-.ecg{display:block;width:100%;height:46px;margin:10px 0 6px}
-.ecg path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;animation:draw 2.2s ease-out forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-@media (prefers-reduced-motion:reduce){.ecg path{animation:none;stroke-dashoffset:0}}
-.tools{display:flex;flex-direction:column;gap:10px;margin:14px 0 18px}
-input[type=search]{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.card h2{font-size:1.05rem;margin:0}
-.tag{font-size:.8rem;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-inline-start:6px;font-weight:500}
-.formula{direction:ltr;text-align:left;font-family:var(--math);font-style:italic;color:var(--muted);font-size:.98rem;margin:0}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--muted)}
-.inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--bg);direction:ltr;overflow:hidden}
-.inp input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);padding:9px 10px;font:inherit;font-size:1rem}
+:root{--bg:#f4f7f8;--sf:#fff;--ink:#10232b;--mut:#5b6f77;--ln:#dbe4e7;--ac:#0b7a82;--acs:#e0f1f2;--in:#f1f5f6;--wn:#b4531a}
+@media (prefers-color-scheme:dark){:root:not([data-th="light"]){--bg:#0c171c;--sf:#13232a;--ink:#e5eff1;--mut:#8ca3aa;--ln:#243940;--ac:#4fc3c9;--acs:#153339;--in:#0f1d23;--wn:#f0a070}}
+:root[data-th="dark"]{--bg:#0c171c;--sf:#13232a;--ink:#e5eff1;--mut:#8ca3aa;--ln:#243940;--ac:#4fc3c9;--acs:#153339;--in:#0f1d23;--wn:#f0a070}
+*{box-sizing:border-box;margin:0;min-width:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;line-height:1.65;padding-bottom:env(safe-area-inset-bottom,0)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:calc(8px + env(safe-area-inset-top,0)) 14px 8px}
+.bar{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{font-size:1.2rem;line-height:1.3}
+h1 b{color:var(--ac);direction:ltr;display:inline-block}
+.sub{font-size:.78rem;color:var(--mut)}
+.ctl{display:flex;gap:6px;align-items:center;flex:none}
+.seg{display:flex;border:1px solid var(--ln);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--sf);color:var(--mut);padding:6px 11px;font:inherit;font-size:.82rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
+.th{border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:10px;width:34px;height:34px;cursor:pointer;font-size:1rem}
+main{max-width:1040px;margin:0 auto;padding:12px 14px 40px}
+#q{width:100%;padding:10px 13px;border:1px solid var(--ln);border-radius:10px;background:var(--sf);color:var(--ink);font:inherit}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:999px;padding:5px 13px;font:inherit;font-size:.86rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card h2{font-size:1rem}
+.tag{font-size:.75rem;color:var(--ac);background:var(--acs);border-radius:6px;padding:1px 8px;margin-inline-start:6px;font-weight:400;direction:ltr;display:inline-block}
+.fm{direction:ltr;text-align:left;font-family:"Cambria Math","STIX Two Math",serif;font-style:italic;color:var(--mut);font-size:.95rem;overflow-wrap:anywhere}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+label{display:flex;flex-direction:column;gap:2px;font-size:.8rem;color:var(--mut)}
+.inp{display:flex;align-items:center;direction:ltr;border:1px solid var(--ln);border-radius:9px;background:var(--in);overflow:hidden}
+.inp:focus-within{border-color:var(--ac)}
+.inp input{flex:1;width:100%;border:0;background:transparent;color:var(--ink);padding:8px 9px;font:inherit;font-size:1rem}
 .inp input:focus{outline:none}
-.inp:focus-within{border-color:var(--accent)}
-.inp small{padding:0 10px;color:var(--muted);font-size:.8rem;white-space:nowrap}
-.res{background:var(--result);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.93rem}
-.row b{direction:ltr;font-weight:700;font-variant-numeric:tabular-nums}
-.row .u{color:var(--muted);font-weight:400;font-size:.8rem;margin-inline-start:4px}
-.note{font-size:.84rem;color:var(--muted);margin:0}
-.warn{color:var(--warn)}
-.empty{color:var(--muted);text-align:center;padding:40px 0}
-footer{margin-top:28px;color:var(--muted);font-size:.82rem;text-align:center}
+.inp small{padding:0 8px;color:var(--mut);font-size:.74rem;white-space:nowrap}
+.res{background:var(--in);border-radius:10px;padding:8px 11px;display:flex;flex-direction:column;gap:2px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.9rem}
+.row b{direction:ltr;font-variant-numeric:tabular-nums}
+.row u{text-decoration:none;color:var(--mut);font-size:.74rem;margin-inline-start:4px}
+.note{font-size:.82rem;color:var(--mut);min-height:1.2em}
+.note.w{color:var(--wn)}
+.empty{text-align:center;color:var(--mut);padding:40px 0}
+footer{text-align:center;color:var(--mut);font-size:.78rem;margin-top:22px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1><span>BME</span> Calculator</h1>
-      <p class="sub">ماشین‌حساب جامع مهندسی پزشکی</p>
-    </div>
-    <button class="theme" id="theme" aria-label="تغییر تم">◐</button>
-  </header>
-  <svg class="ecg" viewBox="0 0 600 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 28H120l8-6 8 6h20l6 4 8-26 8 38 6-16h28l10-9 12 9h60l8-6 8 6h20l6 4 8-26 8 38 6-16h28l10-9 12 9H600"/></svg>
-  <div class="tools">
-    <input type="search" id="q" placeholder="جستجو: QTc، MAP، Nyquist، ..." aria-label="جستجو">
-    <div class="chips" id="chips"></div>
+<header><div class="bar">
+  <div><h1><b>BME</b> Calculator</h1><p class="sub" id="sub"></p></div>
+  <div class="ctl">
+    <div class="seg" role="group" aria-label="Language"><button id="bfa">فارسی</button><button id="ben">English</button></div>
+    <button class="th" id="th" aria-label="Theme">◐</button>
   </div>
-  <main class="grid" id="grid"></main>
-  <footer>این ابزار صرفاً آموزشی است و جایگزین قضاوت بالینی نیست.</footer>
-</div>
-
+</div></header>
+<main>
+  <input type="search" id="q">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+  <footer id="foot"></footer>
+</main>
 <script>
-const G={cardio:"قلب و عروق",clinic:"بالینی",signal:"سیگنال و ADC",elec:"الکترونیک"};
+const S={
+ fa:{sub:"ماشین‌حساب جامع مهندسی پزشکی",q:"جستجو: QTc، MAP، Nyquist ...",all:"همه",empty:"موردی پیدا نشد.",foot:"ابزار آموزشی است و جایگزین قضاوت بالینی نیست."},
+ en:{sub:"Comprehensive biomedical engineering calculator",q:"Search: QTc, MAP, Nyquist ...",all:"All",empty:"No results.",foot:"For education only. Not a substitute for clinical judgment."}
+};
+const G={cardio:["قلب و عروق","Cardiovascular"],clinic:["بالینی","Clinical"],lab:["آزمایشگاه و کلیه","Lab & Renal"],signal:["سیگنال و ADC","Signals & ADC"],elec:["الکترونیک","Electronics"]};
 const f=(k,l,u,d)=>({k,l,u,d});
 const T=[
-{g:"cardio",t:"Heart Rate از ECG",tag:"HR",fm:"HR = 60000 / RR",
- F:[f("rr","فاصله RR","ms",800)],
- C:v=>[["HR",60000/v.rr,"bpm"],["HR (large boxes)",300/(v.rr/200),"bpm"]]},
-{g:"cardio",t:"QTc Correction",tag:"QTc",fm:"QTcB = QT/√RR  ·  QTcF = QT/∛RR",
- F:[f("qt","QT interval","ms",400),f("hr","Heart Rate","bpm",75)],
- C:v=>{const rr=60/v.hr,b=v.qt/Math.sqrt(rr),fr=v.qt/Math.cbrt(rr);
-  return [["QTc (Bazett)",b,"ms"],["QTc (Fridericia)",fr,"ms"]]},
- N:v=>{const b=v.qt/Math.sqrt(60/v.hr);return b>470?["QTc طولانی است (>470 ms)",1]:["در محدوده معمول",0]}},
-{g:"cardio",t:"Mean Arterial Pressure",tag:"MAP",fm:"MAP = DBP + (SBP − DBP)/3",
- F:[f("s","Systolic (SBP)","mmHg",120),f("d","Diastolic (DBP)","mmHg",80)],
- C:v=>[["MAP",v.d+(v.s-v.d)/3,"mmHg"],["Pulse Pressure",v.s-v.d,"mmHg"]]},
-{g:"cardio",t:"Cardiac Output",tag:"CO",fm:"CO = HR × SV ,  CI = CO / BSA",
- F:[f("hr","Heart Rate","bpm",72),f("sv","Stroke Volume","mL",70),f("bsa","BSA","m²",1.9)],
+{g:"cardio",t:["Heart Rate از ECG","Heart Rate from ECG"],tag:"HR",fm:"HR = 60000 / RR",F:[f("rr",["فاصله RR","RR interval"],"ms",800)],
+ C:v=>[["HR",60000/v.rr,"bpm"],[["HR (باکس بزرگ)","HR (large boxes)"],300/(v.rr/200),"bpm"]]},
+{g:"cardio",t:["QTc Correction","QTc Correction"],tag:"QTc",fm:"QTcB = QT/√RR | QTcF = QT/∛RR",F:[f("qt","QT","ms",400),f("hr","HR","bpm",75)],
+ C:v=>{const r=60/v.hr;return[["QTc (Bazett)",v.qt/Math.sqrt(r),"ms"],["QTc (Fridericia)",v.qt/Math.cbrt(r),"ms"]]},
+ N:v=>v.qt/Math.sqrt(60/v.hr)>470?[["QTc طولانی است (بیش از 470 ms)","QTc prolonged (over 470 ms)"],1]:[["در محدوده معمول","Within the usual range"],0]},
+{g:"cardio",t:["Mean Arterial Pressure","Mean Arterial Pressure"],tag:"MAP",fm:"MAP = DBP + (SBP − DBP)/3",F:[f("s","SBP","mmHg",120),f("d","DBP","mmHg",80)],
+ C:v=>[["MAP",v.d+(v.s-v.d)/3,"mmHg"],[["فشار نبض","Pulse Pressure"],v.s-v.d,"mmHg"]]},
+{g:"cardio",t:["Cardiac Output","Cardiac Output"],tag:"CO",fm:"CO = HR × SV | CI = CO / BSA",F:[f("hr","HR","bpm",72),f("sv","SV","mL",70),f("bsa","BSA","m²",1.9)],
  C:v=>[["CO",v.hr*v.sv/1000,"L/min"],["CI",v.hr*v.sv/1000/v.bsa,"L/min/m²"]]},
-{g:"clinic",t:"BMI و BSA",tag:"BMI",fm:"BMI = W/H²  ·  BSA = √(H·W/3600)",
- F:[f("w","Weight","kg",70),f("h","Height","cm",175)],
- C:v=>[["BMI",v.w/Math.pow(v.h/100,2),"kg/m²"],["BSA (Mosteller)",Math.sqrt(v.h*v.w/3600),"m²"]]},
-{g:"clinic",t:"IV Drip Rate",tag:"IV",fm:"gtt/min = (V × DF) / t",
- F:[f("v","Volume","mL",500),f("t","Time","min",240),f("df","Drop Factor","gtt/mL",20)],
- C:v=>[["Drip rate",v.v*v.df/v.t,"gtt/min"],["Flow rate",v.v/v.t*60,"mL/h"]]},
-{g:"clinic",t:"Minute Ventilation",tag:"VE",fm:"VE = VT × RR  ·  VA = (VT − VD) × RR",
- F:[f("vt","Tidal Volume","mL",500),f("rr","Resp. Rate","/min",12),f("vd","Dead Space","mL",150)],
+{g:"clinic",t:["BMI و BSA","BMI & BSA"],tag:"BMI",fm:"BMI = W/H² | BSA = √(H·W/3600)",F:[f("w",["وزن","Weight"],"kg",70),f("h",["قد","Height"],"cm",175)],
+ C:v=>[["BMI",v.w/Math.pow(v.h/100,2),"kg/m²"],["BSA (Mosteller)",Math.sqrt(v.h*v.w/3600),"m²"]],
+ N:v=>{const b=v.w/Math.pow(v.h/100,2);return b<18.5?[["کم‌وزن","Underweight"],1]:b<25?[["نرمال","Normal"],0]:b<30?[["اضافه‌وزن","Overweight"],1]:[["چاقی","Obese"],1]}},
+{g:"clinic",t:["IV Drip Rate","IV Drip Rate"],tag:"IV",fm:"gtt/min = (V × DF) / t",F:[f("v",["حجم","Volume"],"mL",500),f("t",["زمان","Time"],"min",240),f("df","Drop Factor","gtt/mL",20)],
+ C:v=>[[["سرعت قطره","Drip rate"],v.v*v.df/v.t,"gtt/min"],[["سرعت جریان","Flow rate"],v.v/v.t*60,"mL/h"]]},
+{g:"clinic",t:["Minute Ventilation","Minute Ventilation"],tag:"VE",fm:"VE = VT × RR | VA = (VT − VD) × RR",F:[f("vt","VT","mL",500),f("rr","RR","/min",12),f("vd","VD","mL",150)],
  C:v=>[["VE",v.vt*v.rr/1000,"L/min"],["VA",(v.vt-v.vd)*v.rr/1000,"L/min"]]},
-{g:"signal",t:"Sampling & Nyquist",tag:"fs",fm:"fs ≥ 2·fmax  ,  Ts = 1/fs",
- F:[f("fm","Max signal freq","Hz",150),f("fs","Sampling rate","Hz",500)],
- C:v=>[["Nyquist rate (min fs)",2*v.fm,"Hz"],["Ts",1000/v.fs,"ms"]],
- N:v=>v.fs>=2*v.fm?["شرط Nyquist برقرار است",0]:["Aliasing رخ می‌دهد: fs کمتر از 2·fmax",1]},
-{g:"signal",t:"ADC Resolution",tag:"ADC",fm:"LSB = Vref / 2ⁿ  ,  DR ≈ 6.02n + 1.76",
- F:[f("n","Bits (n)","bit",12),f("vr","Vref","V",3.3)],
- C:v=>[["Levels (2ⁿ)",Math.pow(2,v.n),""],["LSB",v.vr/Math.pow(2,v.n)*1000,"mV"],["Dynamic Range",6.02*v.n+1.76,"dB"]]},
-{g:"signal",t:"Signal-to-Noise Ratio",tag:"SNR",fm:"SNR = 20·log₁₀(Vs / Vn)",
- F:[f("vs","Signal Vrms","mV",1),f("vn","Noise Vrms","mV",0.05)],
- C:v=>[["SNR",20*Math.log10(v.vs/v.vn),"dB"],["Power ratio",Math.pow(v.vs/v.vn,2),"×"]]},
-{g:"elec",t:"RC Filter",tag:"RC",fm:"fc = 1 / (2πRC)  ,  τ = RC",
- F:[f("r","R","kΩ",1),f("c","C","µF",1)],
+{g:"lab",t:["Anion Gap","Anion Gap"],tag:"AG",fm:"AG = Na − (Cl + HCO₃)",F:[f("na","Na","mEq/L",140),f("cl","Cl","mEq/L",104),f("hc","HCO₃","mEq/L",24)],
+ C:v=>[["Anion Gap",v.na-(v.cl+v.hc),"mEq/L"]],
+ N:v=>v.na-(v.cl+v.hc)>12?[["بالاتر از محدوده معمول (8 تا 12)","Above the usual range (8–12)"],1]:[["در محدوده معمول","Within the usual range"],0]},
+{g:"lab",t:["Corrected Calcium","Corrected Calcium"],tag:"Ca",fm:"Ca_corr = Ca + 0.8 × (4.0 − Albumin)",F:[f("ca","Ca","mg/dL",8),f("al","Albumin","g/dL",3)],
+ C:v=>[[["کلسیم اصلاح‌شده","Corrected Ca"],v.ca+0.8*(4-v.al),"mg/dL"]]},
+{g:"lab",t:["Creatinine Clearance","Creatinine Clearance"],tag:"CrCl",fm:"CrCl = (140 − age) × W / (72 × SCr)",F:[f("a",["سن","Age"],"yr",40),f("w",["وزن","Weight"],"kg",70),f("s","SCr","mg/dL",1)],
+ C:v=>{const m=(140-v.a)*v.w/(72*v.s);return[[["مرد","Male"],m,"mL/min"],[["زن (×0.85)","Female (×0.85)"],m*0.85,"mL/min"]]}},
+{g:"signal",t:["Sampling و Nyquist","Sampling & Nyquist"],tag:"fs",fm:"fs ≥ 2·fmax | Ts = 1/fs",F:[f("fm","fmax","Hz",150),f("fs","fs","Hz",500)],
+ C:v=>[[["حداقل نرخ (Nyquist)","Nyquist rate"],2*v.fm,"Hz"],["Ts",1000/v.fs,"ms"]],
+ N:v=>v.fs>=2*v.fm?[["شرط Nyquist برقرار است","Nyquist criterion met"],0]:[["Aliasing رخ می‌دهد: fs کمتر از 2·fmax","Aliasing: fs is below 2·fmax"],1]},
+{g:"signal",t:["ADC Resolution","ADC Resolution"],tag:"ADC",fm:"LSB = Vref / 2ⁿ | DR ≈ 6.02n + 1.76",F:[f("n",["تعداد بیت (n)","Bits (n)"],"bit",12),f("vr","Vref","V",3.3)],
+ C:v=>[[["تعداد سطوح (2ⁿ)","Levels (2ⁿ)"],Math.pow(2,v.n),""],["LSB",v.vr/Math.pow(2,v.n)*1000,"mV"],["Dynamic Range",6.02*v.n+1.76,"dB"]]},
+{g:"signal",t:["Signal-to-Noise Ratio","Signal-to-Noise Ratio"],tag:"SNR",fm:"SNR = 20·log₁₀(Vs / Vn)",F:[f("vs",["سیگنال","Signal"],"mV",1),f("vn",["نویز","Noise"],"mV",0.05)],
+ C:v=>[["SNR",20*Math.log10(v.vs/v.vn),"dB"],[["نسبت توان","Power ratio"],Math.pow(v.vs/v.vn,2),"×"]]},
+{g:"elec",t:["RC Filter","RC Filter"],tag:"RC",fm:"fc = 1 / (2πRC) | τ = RC",F:[f("r","R","kΩ",1),f("c","C","µF",1)],
  C:v=>[["fc",1/(2*Math.PI*v.r*1e3*v.c*1e-6),"Hz"],["τ",v.r*v.c,"ms"]]},
-{g:"elec",t:"Op-Amp Gain",tag:"Op-Amp",fm:"Inv: −Rf/Rin  ·  Non-inv: 1 + Rf/Rin",
- F:[f("rf","Rf","kΩ",100),f("ri","Rin","kΩ",10)],
- C:v=>[["Inverting Gain",-v.rf/v.ri,"V/V"],["Non-inverting Gain",1+v.rf/v.ri,"V/V"],["Non-inv (dB)",20*Math.log10(1+v.rf/v.ri),"dB"]]},
-{g:"elec",t:"Ohm's Law & Power",tag:"V=IR",fm:"I = V/R  ,  P = V·I",
- F:[f("v","Voltage","V",5),f("r","Resistance","kΩ",1)],
+{g:"elec",t:["Op-Amp Gain","Op-Amp Gain"],tag:"Op-Amp",fm:"Inv: −Rf/Rin | Non-inv: 1 + Rf/Rin",F:[f("rf","Rf","kΩ",100),f("ri","Rin","kΩ",10)],
+ C:v=>[["Inverting",-v.rf/v.ri,"V/V"],["Non-inverting",1+v.rf/v.ri,"V/V"],["Non-inv (dB)",20*Math.log10(1+v.rf/v.ri),"dB"]]},
+{g:"elec",t:["Ohm's Law","Ohm's Law"],tag:"V=IR",fm:"I = V/R | P = V·I",F:[f("v",["ولتاژ","Voltage"],"V",5),f("r","R","kΩ",1)],
  C:v=>[["I",v.v/v.r,"mA"],["P",v.v*v.v/v.r,"mW"]]},
-{g:"elec",t:"Voltage Divider",tag:"Vout",fm:"Vout = Vin · R2 / (R1 + R2)",
- F:[f("vi","Vin","V",5),f("r1","R1","kΩ",10),f("r2","R2","kΩ",10)],
+{g:"elec",t:["Voltage Divider","Voltage Divider"],tag:"Vout",fm:"Vout = Vin · R2 / (R1 + R2)",F:[f("vi","Vin","V",5),f("r1","R1","kΩ",10),f("r2","R2","kΩ",10)],
  C:v=>[["Vout",v.vi*v.r2/(v.r1+v.r2),"V"]]}
 ];
-
+const $=id=>document.getElementById(id),R=document.documentElement;
 const fa="۰۱۲۳۴۵۶۷۸۹",ar="٠١٢٣٤٥٦٧٨٩";
 const norm=s=>String(s).replace(/[۰-۹]/g,d=>fa.indexOf(d)).replace(/[٠-٩]/g,d=>ar.indexOf(d)).replace(/[٫,]/g,".").replace(/\u2212/g,"-");
 const fmt=x=>{if(!isFinite(x))return"—";const a=Math.abs(x);return a>=1e5||(a>0&&a<1e-3)?x.toExponential(3):String(+x.toPrecision(5))};
+let L="fa",grp="all",term="",V={};
+const tr=x=>Array.isArray(x)?x[L==="fa"?0:1]:x;
+const save=()=>{try{localStorage.setItem("bme",JSON.stringify({L,th:R.dataset.th||""}))}catch(e){}};
 
-let grp="all",term="";
-const grid=document.getElementById("grid");
-
-function card(c){
+function card(c,n){
   const el=document.createElement("section");el.className="card";
-  el.innerHTML=`<h2>${c.t}<span class="tag">${c.tag}</span></h2><p class="formula">${c.fm}</p>
-  <div class="fields">${c.F.map(x=>`<label>${x.l}<span class="inp"><input inputmode="decimal" data-k="${x.k}" value="${x.d}"><small>${x.u}</small></span></label>`).join("")}</div>
-  <div class="res"></div><p class="note"></p>`;
+  el.innerHTML=`<h2>${tr(c.t)}<span class="tag">${c.tag}</span></h2><p class="fm">${c.fm}</p><div class="fields">${c.F.map(x=>`<label>${tr(x.l)}<span class="inp"><input inputmode="decimal" data-k="${x.k}" value="${V[n+x.k]??x.d}"><small>${x.u}</small></span></label>`).join("")}</div><div class="res"></div><p class="note"></p>`;
   const res=el.querySelector(".res"),note=el.querySelector(".note");
   const run=()=>{
     const v={};let ok=true;
-    el.querySelectorAll("input").forEach(i=>{const n=parseFloat(norm(i.value));v[i.dataset.k]=n;if(isNaN(n))ok=false});
-    let rows=[];
-    if(ok){try{rows=c.C(v)}catch(e){}}
-    res.innerHTML=(ok?rows:c.C(Object.fromEntries(c.F.map(x=>[x.k,NaN])))).map(r=>`<div class="row"><span>${r[0]}</span><span><b>${ok?fmt(r[1]):"—"}</b><span class="u">${r[2]}</span></span></div>`).join("");
+    el.querySelectorAll("input").forEach(i=>{V[n+i.dataset.k]=i.value;const x=parseFloat(norm(i.value));v[i.dataset.k]=x;if(isNaN(x))ok=false});
+    let rows=[];try{rows=c.C(ok?v:Object.fromEntries(c.F.map(x=>[x.k,NaN])))}catch(e){}
+    res.innerHTML=rows.map(r=>`<div class="row"><span>${tr(r[0])}</span><span><b>${ok?fmt(r[1]):"—"}</b><u>${r[2]}</u></span></div>`).join("");
     const m=ok&&c.N?c.N(v):null;
-    note.textContent=m?m[0]:"";note.className="note"+(m&&m[1]?" warn":"");
+    note.textContent=m?tr(m[0]):"";note.className="note"+(m&&m[1]?" w":"");
   };
   el.addEventListener("input",run);run();return el;
 }
-
 function render(){
-  grid.innerHTML="";
-  const list=T.filter(c=>(grp==="all"||c.g===grp)&&(c.t+" "+c.tag+" "+c.fm).toLowerCase().includes(term));
-  if(!list.length){grid.innerHTML='<p class="empty">موردی پیدا نشد. عبارت دیگری جستجو کنید.</p>';return}
-  list.forEach(c=>grid.appendChild(card(c)));
+  const g=$("grid");g.innerHTML="";
+  const list=T.map((c,n)=>[c,n]).filter(([c])=>(grp==="all"||c.g===grp)&&(c.t.join(" ")+" "+c.tag+" "+c.fm).toLowerCase().includes(term));
+  if(!list.length){g.innerHTML=`<p class="empty">${S[L].empty}</p>`;return}
+  list.forEach(([c,n])=>g.appendChild(card(c,n)));
 }
-
-const chips=document.getElementById("chips");
-function drawChips(){
-  chips.innerHTML="";
-  [["all","همه"],...Object.entries(G)].forEach(([k,l])=>{
-    const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",k===grp);
-    b.onclick=()=>{grp=k;drawChips();render()};chips.appendChild(b);
+function chips(){
+  const b=$("chips");b.innerHTML="";
+  [["all",S[L].all],...Object.entries(G).map(([k,v])=>[k,tr(v)])].forEach(([k,l])=>{
+    const e=document.createElement("button");e.className="chip";e.textContent=l;e.setAttribute("aria-pressed",k===grp);
+    e.onclick=()=>{grp=k;chips();render()};b.appendChild(e);
   });
 }
-document.getElementById("q").addEventListener("input",e=>{term=norm(e.target.value).trim().toLowerCase();render()});
-
-const root=document.documentElement,tb=document.getElementById("theme");
-tb.onclick=()=>{
-  const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
-  root.dataset.theme=dark?"light":"dark";
+function lang(l){
+  L=l;R.lang=l;R.dir=l==="fa"?"rtl":"ltr";
+  $("bfa").setAttribute("aria-pressed",l==="fa");$("ben").setAttribute("aria-pressed",l==="en");
+  $("sub").textContent=S[l].sub;$("q").placeholder=S[l].q;$("foot").textContent=S[l].foot;
+  chips();render();save();
+}
+$("bfa").onclick=()=>lang("fa");$("ben").onclick=()=>lang("en");
+$("q").addEventListener("input",e=>{term=norm(e.target.value).trim().toLowerCase();render()});
+$("th").onclick=()=>{
+  const d=R.dataset.th?R.dataset.th==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  R.dataset.th=d?"light":"dark";save();
 };
-drawChips();render();
+try{const s=JSON.parse(localStorage.getItem("bme")||"{}");if(s.th)R.dataset.th=s.th;if(s.L)L=s.L}catch(e){}
+lang(L);
 </script>
 </body>
 </html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BME Calculator | ماشین‌حساب مهندسی پزشکی</title>
+<style>
+:root{
+  --bg:#f6f8f8;--surface:#fff;--ink:#12242b;--muted:#5d727a;--line:#dde5e7;
+  --accent:#0b7f86;--accent-soft:#e3f3f3;--result:#f1f6f7;--warn:#b4531a;
+  --font:Tahoma,"Segoe UI",system-ui,sans-serif;
+  --math:"Cambria Math","STIX Two Math","Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0e1a1f;--surface:#15262c;--ink:#e6f0f2;--muted:#8fa6ad;--line:#25393f;--accent:#4fc3c9;--accent-soft:#16363a;--result:#112127;--warn:#e89a66}
+}
+:root[data-theme="dark"]{--bg:#0e1a1f;--surface:#15262c;--ink:#e6f0f2;--muted:#8fa6ad;--line:#25393f;--accent:#4fc3c9;--accent-soft:#16363a;--result:#112127;--warn:#e89a66}
+*{box-sizing:border-box}
+html,body{max-width:100%;overflow-x:hidden}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.wrap{width:100%;max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 4px}
+h1{font-size:1.5rem;margin:0;font-weight:700;letter-spacing:0}
+h1 span{color:var(--accent);font-family:var(--math);direction:ltr;display:inline-block}
+.sub{color:var(--muted);font-size:.92rem;margin:2px 0 0}
+.theme{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:42px;height:42px;font-size:1.1rem;cursor:pointer}
+.ecg{display:block;width:100%;height:46px;margin:10px 0 6px}
+.ecg path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;animation:draw 2.2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.ecg path{animation:none;stroke-dashoffset:0}}
+.tools{min-width:0;max-width:100%;display:flex;flex-direction:column;gap:10px;margin:14px 0 18px}
+input[type=search]{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+.chips{max-width:100%;display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,310px),1fr));gap:14px}
+.grid>*{min-width:0}
+.card{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h2{font-size:1.05rem;margin:0}
+.tag{font-size:.8rem;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-inline-start:6px;font-weight:500}
+.formula{white-space:normal;overflow-wrap:anywhere;direction:ltr;text-align:left;font-family:var(--math);font-style:italic;color:var(--muted);font-size:.98rem;margin:0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label{min-width:0;display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--muted)}
+.inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--bg);direction:ltr;overflow:hidden}
+.inp input{flex:1;width:100%;min-width:0;border:0;background:transparent;color:var(--ink);padding:9px 10px;font:inherit;font-size:1rem}
+.inp input:focus{outline:none}
+.inp:focus-within{border-color:var(--accent)}
+.inp small{padding:0 10px;color:var(--muted);font-size:.8rem;white-space:nowrap}
+.res{background:var(--result);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.93rem}
+.row b{direction:ltr;font-weight:700;font-variant-numeric:tabular-nums}
+.row .u{color:var(--muted);font-weight:400;font-size:.8rem;margin-inline-start:4px}
+.note{font-size:.84rem;color:var(--muted);margin:0}
+.warn{color:var(--warn)}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+footer{margin-top:28px;color:var(--muted);font-size:.82rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span>BME</span> Calculator</h1>
+      <p class="sub">ماشین‌حساب جامع مهندسی پزشکی</p>
+    </div>
+    <button class="theme" id="theme" aria-label="تغییر تم">◐</button>
+  </header>
+  <svg class="ecg" viewBox="0 0 600 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 28H120l8-6 8 6h20l6 4 8-26 8 38 6-16h28l10-9 12 9h60l8-6 8 6h20l6 4 8-26 8 38 6-16h28l10-9 12 9H600"/></svg>
+  <div class="tools">
+    <input type="search" id="q" placeholder="جستجو: QTc، MAP، Nyquist، ..." aria-label="جستجو">
+    <div class="chips" id="chips"></div>
+  </div>
+  <main class="grid" id="grid"></main>
+  <footer>این ابزار صرفاً آموزشی است و جایگزین قضاوت بالینی نیست.</footer>
+</div>
+
+<script>
+const G={cardio:"قلب و عروق",clinic:"بالینی",signal:"سیگنال و ADC",elec:"الکترونیک"};
+const f=(k,l,u,d)=>({k,l,u,d});
+const T=[
+{g:"cardio",t:"Heart Rate از ECG",tag:"HR",fm:"HR = 60000 / RR",
+ F:[f("rr","فاصله RR","ms",800)],
+ C:v=>[["HR",60000/v.rr,"bpm"],["HR (large boxes)",300/(v.rr/200),"bpm"]]},
+{g:"cardio",t:"QTc Correction",tag:"QTc",fm:"QTcB = QT/√RR  ·  QTcF = QT/∛RR",
+ F:[f("qt","QT interval","ms",400),f("hr","Heart Rate","bpm",75)],
+ C:v=>{const rr=60/v.hr,b=v.qt/Math.sqrt(rr),fr=v.qt/Math.cbrt(rr);
+  return [["QTc (Bazett)",b,"ms"],["QTc (Fridericia)",fr,"ms"]]},
+ N:v=>{const b=v.qt/Math.sqrt(60/v.hr);return b>470?["QTc طولانی است (>470 ms)",1]:["در محدوده معمول",0]}},
+{g:"cardio",t:"Mean Arterial Pressure",tag:"MAP",fm:"MAP = DBP + (SBP − DBP)/3",
+ F:[f("s","Systolic (SBP)","mmHg",120),f("d","Diastolic (DBP)","mmHg",80)],
+ C:v=>[["MAP",v.d+(v.s-v.d)/3,"mmHg"],["Pulse Pressure",v.s-v.d,"mmHg"]]},
+{g:"cardio",t:"Cardiac Output",tag:"CO",fm:"CO = HR × SV ,  CI = CO / BSA",
+ F:[f("hr","Heart Rate","bpm",72),f("sv","Stroke Volume","mL",70),f("bsa","BSA","m²",1.9)],
+ C:v=>[["CO",v.hr*v.sv/1000,"L/min"],["CI",v.hr*v.sv/1000/v.bsa,"L/min/m²"]]},
+{g:"clinic",t:"BMI و BSA",tag:"BMI",fm:"BMI = W/H²  ·  BSA = √(H·W/3600)",
+ F:[f("w","Weight","kg",70),f("h","Height","cm",175)],
+ C:v=>[["BMI",v.w/Math.pow(v.h/100,2),"kg/m²"],["BSA (Mosteller)",Math.sqrt(v.h*v.w/3600),"m²"]]},
+{g:"clinic",t:"IV Drip Rate",tag:"IV",fm:"gtt/min = (V × DF) / t",
+ F:[f("v","Volume","mL",500),f("t","Time","min",240),f("df","Drop Factor","gtt/mL",20)],
+ C:v=>[["Drip rate",v.v*v.df/v.t,"gtt/min"],["Flow rate",v.v/v.t*60,"mL/h"]]},
+{g:"clinic",t:"Minute Ventilation",tag:"VE",fm:"VE = VT × RR  ·  VA = (VT − VD) × RR",
+ F:[f("vt","Tidal Volume","mL",500),f("rr","Resp. Rate","/min",12),f("vd","Dead Space","mL",150)],
+ C:v=>[["VE",v.vt*v.rr/1000,"L/min"],["VA",(v.vt-v.vd)*v.rr/1000,"L/min"]]},
+{g:"signal",t:"Sampling & Nyquist",tag:"fs",fm:"fs ≥ 2·fmax  ,  Ts = 1/fs",
+ F:[f("fm","Max signal freq","Hz",150),f("fs","Sampling rate","Hz",500)],
+ C:v=>[["Nyquist rate (min fs)",2*v.fm,"Hz"],["Ts",1000/v.fs,"ms"]],
+ N:v=>v.fs>=2*v.fm?["شرط Nyquist برقرار است",0]:["Aliasing رخ می‌دهد: fs کمتر از 2·fmax",1]},
+{g:"signal",t:"ADC Resolution",tag:"ADC",fm:"LSB = Vref / 2ⁿ  ,  DR ≈ 6.02n + 1.76",
+ F:[f("n","Bits (n)","bit",12),f("vr","Vref","V",3.3)],
+ C:v=>[["Levels (2ⁿ)",Math.pow(2,v.n),""],["LSB",v.vr/Math.pow(2,v.n)*1000,"mV"],["Dynamic Range",6.02*v.n+1.76,"dB"]]},
+{g:"signal",t:"Signal-to-Noise Ratio",tag:"SNR",fm:"SNR = 20·log₁₀(Vs / Vn)",
+ F:[f("vs","Signal Vrms","mV",1),f("vn","Noise Vrms","mV",0.05)],
+ C:v=>[["SNR",20*Math.log10(v.vs/v.vn),"dB"],["Power ratio",Math.pow(v.vs/v.vn,2),"×"]]},
+{g:"elec",t:"RC Filter",tag:"RC",fm:"fc = 1 / (2πRC)  ,  τ = RC",
+ F:[f("r","R","kΩ",1),f("c","C","µF",1)],
+ C:v=>[["fc",1/(2*Math.PI*v.r*1e3*v.c*1e-6),"Hz"],["τ",v.r*v.c,"ms"]]},
+{g:"elec",t:"Op-Amp Gain",tag:"Op-Amp",fm:"Inv: −Rf/Rin  ·  Non-inv: 1 + Rf/Rin",
+ F:[f("rf","Rf","kΩ",100),f("ri","Rin","kΩ",10)],
+ C:v=>[["Inverting Gain",-v.rf/v.ri,"V/V"],["Non-inverting Gain",1+v.rf/v.ri,"V/V"],["Non-inv (dB)",20*Math.log10(1+v.rf/v.ri),"dB"]]},
+{g:"elec",t:"Ohm's Law & Power",tag:"V=IR",fm:"I = V/R  ,  P = V·I",
+ F:[f("v","Voltage","V",5),f("r","Resistance","kΩ",1)],
+ C:v=>[["I",v.v/v.r,"mA"],["P",v.v*v.v/v.r,"mW"]]},
+{g:"elec",t:"Voltage Divider",tag:"Vout",fm:"Vout = Vin · R2 / (R1 + R2)",
+ F:[f("vi","Vin","V",5),f("r1","R1","kΩ",10),f("r2","R2","kΩ",10)],
+ C:v=>[["Vout",v.vi*v.r2/(v.r1+v.r2),"V"]]}
+];
+
+const fa="۰۱۲۳۴۵۶۷۸۹",ar="٠١٢٣٤٥٦٧٨٩";
+const norm=s=>String(s).replace(/[۰-۹]/g,d=>fa.indexOf(d)).replace(/[٠-٩]/g,d=>ar.indexOf(d)).replace(/[٫,]/g,".").replace(/\u2212/g,"-");
+const fmt=x=>{if(!isFinite(x))return"—";const a=Math.abs(x);return a>=1e5||(a>0&&a<1e-3)?x.toExponential(3):String(+x.toPrecision(5))};
+
+let grp="all",term="";
+const grid=document.getElementById("grid");
+
+function card(c){
+  const el=document.createElement("section");el.className="card";
+  el.innerHTML=`<h2>${c.t}<span class="tag">${c.tag}</span></h2><p class="formula">${c.fm}</p>
+  <div class="fields">${c.F.map(x=>`<label>${x.l}<span class="inp"><input inputmode="decimal" data-k="${x.k}" value="${x.d}"><small>${x.u}</small></span></label>`).join("")}</div>
+  <div class="res"></div><p class="note"></p>`;
+  const res=el.querySelector(".res"),note=el.querySelector(".note");
+  const run=()=>{
+    const v={};let ok=true;
+    el.querySelectorAll("input").forEach(i=>{const n=parseFloat(norm(i.value));v[i.dataset.k]=n;if(isNaN(n))ok=false});
+    let rows=[];
+    if(ok){try{rows=c.C(v)}catch(e){}}
+    res.innerHTML=(ok?rows:c.C(Object.fromEntries(c.F.map(x=>[x.k,NaN])))).map(r=>`<div class="row"><span>${r[0]}</span><span><b>${ok?fmt(r[1]):"—"}</b><span class="u">${r[2]}</span></span></div>`).join("");
+    const m=ok&&c.N?c.N(v):null;
+    note.textContent=m?m[0]:"";note.className="note"+(m&&m[1]?" warn":"");
+  };
+  el.addEventListener("input",run);run();return el;
+}
+
+function render(){
+  grid.innerHTML="";
+  const list=T.filter(c=>(grp==="all"||c.g===grp)&&(c.t+" "+c.tag+" "+c.fm).toLowerCase().includes(term));
+  if(!list.length){grid.innerHTML='<p class="empty">موردی پیدا نشد. عبارت دیگری جستجو کنید.</p>';return}
+  list.forEach(c=>grid.appendChild(card(c)));
+}
+
+const chips=document.getElementById("chips");
+function drawChips(){
+  chips.innerHTML="";
+  [["all","همه"],...Object.entries(G)].forEach(([k,l])=>{
+    const b=document.createElement("button");b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",k===grp);
+    b.onclick=()=>{grp=k;drawChips();render()};chips.appendChild(b);
+  });
+}
+document.getElementById("q").addEventListener("input",e=>{term=norm(e.target.value).trim().toLowerCase();render()});
+
+const root=document.documentElement,tb=document.getElementById("theme");
+tb.onclick=()=>{
+  const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  root.dataset.theme=dark?"light":"dark";
+};
+drawChips();render();
+</script>
+</body>
+</html>
